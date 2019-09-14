@@ -1,0 +1,144 @@
+<div class="wraper">
+  <div class="container">
+    <div class="row">
+      <div class="noMessages" *ngIf="(messages$ | async)?.length === 0">
+        <h1>Inbox is empty</h1>
+      </div>
+      <div
+        class="col-lg-10 col-md-12 col-sm-12 mt-3"
+        *ngFor="let message of messages$ | async"
+      >
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>
+              <h4 class="subject">
+                Message from {{ message.messageSender.userName }}
+              </h4>
+            </mat-card-title>
+            <mat-card-subtitle>
+              Subject: Report on the comment posted by
+              {{ message.comment.user.userName }} for
+              {{ message.comment.game.name }} on
+              {{ message.comment.commentDate | date: 'dd.MM.yyyy' }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          <hr />
+          <mat-card-contetn>
+            <h5>The content of the comment:</h5>
+            <p>{{ message.comment.content }}</p>
+            <hr />
+            <h5>The content of the report:</h5>
+            <p>{{ message.messageContent }}</p>
+          </mat-card-contetn>
+          <hr />
+          <mat-card-footer>
+            <button
+              mat-button
+              data-toggle="modal"
+              data-target="#deleteCommentModal"
+              (click)="onDeleteComment(message)"
+            >
+              Delete Comment
+            </button>
+            <button
+              mat-button
+              data-toggle="modal"
+              data-target="#deleteMessageModal"
+              (click)="onMessageDelete(message)"
+            >
+              Delete Message
+            </button>
+          </mat-card-footer>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Comment Modal -->
+<div
+  class="modal fade"
+  id="deleteCommentModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteCommentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteCommentModalLabel">Delete Comment</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Do you want to delete comment?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="onCommentDeleteSubmit()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  -->
+<div
+  class="modal fade"
+  id="deleteMessageModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteMessageModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteMessageModalLabel">Delete Message</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Do you want to delete a message?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="onMessageDeleteSubmit()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

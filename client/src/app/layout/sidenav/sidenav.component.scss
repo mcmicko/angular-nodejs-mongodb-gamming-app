@@ -1,0 +1,23 @@
+mat-sidenav-container {
+  height: 110%;
+  position: fixed;
+  top: 62px;
+  transform: translateX(0px);
+  transition: ease 0.8s;
+  z-index: 5;
+}
+
+.example-sidenav {
+  width: 150px;
+}
+
+a {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  padding-top: 5px;
+}
+
+mat-sidenav-content .icon {
+  cursor: pointer;
+}

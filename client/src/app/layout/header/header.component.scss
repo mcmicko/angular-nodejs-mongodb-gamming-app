@@ -1,0 +1,53 @@
+mat-toolbar {
+  background: darken($color: #0394fc, $amount: 8%);
+}
+
+.example-icon {
+  color: #ffffff;
+  padding: 0 14px;
+  cursor: pointer;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  padding: 0 50px;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+}
+
+a {
+  padding-left: 20px;
+  color: #ffffff;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+
+mat-icon {
+  padding-left: 20px;
+  padding-right: 30px;
+  margin-right: 10px;
+}
+
+.searchBox {
+  margin-top: 65px;
+  margin-left: 20px;
+}
+
+.searchBox button {
+  margin-left: 3px;
+}
+
+a.active {
+  color: rgb(17, 55, 98);
+  text-shadow: 0px 0px 15px #06303d;
+}
+
+.not-active {
+  color: white;
+}

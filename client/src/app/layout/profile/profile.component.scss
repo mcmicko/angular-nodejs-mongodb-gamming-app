@@ -1,0 +1,141 @@
+.wraper {
+  width: 100%;
+  height: 100%;
+  margin-top: 100px;
+}
+.example-card {
+  width: 100%;
+  margin: 5px 0 10px 100px;
+  background: rgba(255, 255, 255, 0.8);
+  color: black;
+}
+
+.game-card {
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+mat-tab:first-child {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 3px;
+}
+
+.avgRating {
+  display: flex;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+mat-card-actions:last-child {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+tweet {
+  position: absolute;
+  top: 8px;
+  left: 210px;
+}
+
+h5 a {
+  cursor: pointer;
+}
+
+h5 a:hover {
+  text-decoration: none;
+}
+.firstName {
+  margin-top: 8px;
+}
+
+#profile-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: 20px;
+  box-shadow: 0 0 10px 1px black;
+}
+
+.user-info {
+  margin-top: -10px;
+}
+
+.about {
+  text-align: center;
+}
+
+.no-games {
+  text-align: center;
+}
+
+.list {
+  display: inline;
+  padding-left: 5px;
+}
+
+.saveButton {
+  padding-left: 20px;
+}
+
+.deleteQuestion {
+  text-align: center;
+}
+
+@media only screen and (max-width: 1024px) {
+  .example-card {
+    width: 100%;
+    margin: 20px auto;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .example-card {
+    width: 100%;
+    margin: 20px auto;
+  }
+}
+#modal-schedule {
+  width: 900px;
+
+  #schedule-game {
+    display: flex;
+
+    input[type='datetime-local'] {
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+      color: #000000;
+      font-family: 'Helvetica', arial, sans-serif;
+      font-size: 18px;
+      border: 1px solid #ecf0f1;
+      background: #d6e1e4;
+      padding: 5px;
+      display: inline-block !important;
+      visibility: visible !important;
+    }
+
+    input[type='datetime-local'],
+    focus {
+      color: #000000;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+    }
+
+    #gameButton {
+      margin-top: 1rem;
+      width: 100%;
+      height: 40px;
+      box-shadow: 0px 3px 3px 0.4px rgb(98, 95, 95);
+
+      &:hover {
+        box-shadow: 0 0 0 0 black;
+      }
+    }
+  }
+}
+/* A few custom styles for date inputs */

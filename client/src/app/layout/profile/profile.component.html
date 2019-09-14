@@ -1,0 +1,447 @@
+<div class="wraper">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 col-sm-12">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title
+              >{{ selectedUser?.userName }}
+              <h5>
+                Edit profile
+                <a data-toggle="modal" data-target="#editProfileModal"
+                  >click here...</a
+                >
+              </h5>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-tab-group>
+              <mat-tab label="My Games">
+                <div *ngIf="(userGames$ | async)?.length === 0">
+                  <h1>No Posted Games</h1>
+                </div>
+                <div class="game-tab" *ngFor="let game of userGames$ | async">
+                  <mat-card class="game-card">
+                    <mat-card-header>
+                      <mat-card-title
+                        >{{ game.name }}
+                        <i
+                          *ngIf="game.scheduleDate"
+                          class="material-icons"
+                          style="position: absolute; right: 10px; color: #0394fc; font-size: 3rem; display: block;"
+                        >
+                          schedule
+                        </i></mat-card-title
+                      >
+                      <mat-card-subtitle>
+                        <div class="avgRating">
+                          <small style="margin-top: 10px; margin-right: 5px;">
+                            Average Rating:
+                          </small>
+                          <star-rating
+                            value="{{ avgRating(game) | number: '0.2-2' }}"
+                            checkedcolor="#0394fc"
+                            uncheckedcolor="gray"
+                            size="24px"
+                            readonly="true"
+                          ></star-rating>
+                        </div>
+                        <div style="display: flex;flex-direction: row;">
+                          <p *ngFor="let platform of game.platforms">
+                            {{ platform.name }},
+                          </p>
+                        </div>
+                        <div *ngIf="game.platforms.length === 0">
+                          <small>no platforms available</small>
+                        </div>
+                        <p>
+                          Release date:
+                          {{
+                            ' ' + game.first_release_date | date: 'dd.MM.yyyy'
+                          }}
+                        </p></mat-card-subtitle
+                      >
+                    </mat-card-header>
+
+                    <mat-card-content>
+                      <div style="display: flex;">
+                        <img
+                          style="width: 20%; margin-right: 1rem; border-radius: 4px; box-shadow: 0 5px 10px 1px rgb(73, 69, 69)"
+                          src="{{
+                            game.cover?.url.replace('t_thumb', 't_720p')
+                          }}"
+                          alt="cover img"
+                        />
+                        <div>
+                          <p>
+                            {{ game.storyline }}
+                          </p>
+                          <p *ngIf="!game.storyline">
+                            This game does'nt have storyline provided from
+                            database
+                          </p>
+                          <p *ngIf="game.rating">
+                            rating:
+                            <strong
+                              [style.color]="
+                                game.rating > 90
+                                  ? '#19d14a'
+                                  : game.rating > 80
+                                  ? '#1da128'
+                                  : game.rating > 60
+                                  ? '#bfd119'
+                                  : game.rating > 40
+                                  ? '#d9b01c'
+                                  : '#bf3a1d'
+                              "
+                              >{{ game.rating.toFixed(1) }}</strong
+                            >
+                          </p>
+                          <p *ngIf="!game.rating">rating: N/A</p>
+                        </div>
+                      </div>
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <button
+                        mat-button
+                        (click)="onScheduleGame(game)"
+                        data-toggle="modal"
+                        data-target="#scheduleGameModal"
+                      >
+                        SCHEDULE
+                      </button>
+                      <button
+                        mat-button
+                        (click)="onGameDelete(game)"
+                        data-toggle="modal"
+                        data-target="#deleteGameModal"
+                      >
+                        DELETE
+                      </button>
+                      <tweet
+                        text="my choose is {{ game.name }}"
+                        url="{{ game.url }}"
+                      ></tweet>
+                    </mat-card-actions>
+                  </mat-card>
+                </div>
+              </mat-tab>
+              <mat-tab label="About">
+                <div class="about">
+                  <div class="profile-image">
+                    <img
+                      *ngIf="selectedUser.imagePath === null || undefined"
+                      style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;"
+                      src="../../../assets/blank-profile-picture-973460_960_720.png"
+                      alt=""
+                    />
+                    <img
+                      id="profile-img"
+                      src="{{ selectedUser.imagePath }}"
+                      alt=""
+                    />
+                  </div>
+                  <p class="firstName">User name:</p>
+                  <h4 class="user-info">{{ selectedUser?.userName }}</h4>
+                  <p>Email:</p>
+                  <h4 class="user-info">{{ selectedUser?.email }}</h4>
+                  <p>First name:</p>
+                  <h4 class="user-info">{{ selectedUser?.firstName }}</h4>
+                  <h5 class="user-info" *ngIf="!selectedUser?.firstName">
+                    Enter your first name
+                  </h5>
+                  <p>Last name:</p>
+                  <h4 class="user-info">{{ selectedUser?.lastName }}</h4>
+                  <h5 class="user-info" *ngIf="!selectedUser?.lastName">
+                    Enter your last name
+                  </h5>
+                  <p>Date of birth:</p>
+                  <h4 class="user-info">
+                    {{ selectedUser?.dateOfBirth | date: 'dd.MM.yyyy' }}
+                  </h4>
+                  <h5 class="user-info" *ngIf="!selectedUser?.dateOfBirth">
+                    Enter your birthday
+                  </h5>
+                  <p>Hometown:</p>
+                  <h4 class="user-info">{{ selectedUser?.hometown }}</h4>
+                  <h5 class="user-info" *ngIf="!selectedUser?.hometown">
+                    Enter your hometown
+                  </h5>
+                  <p>Country:</p>
+                  <h4 class="user-info">{{ selectedUser?.country }}</h4>
+                  <h5 class="user-info" *ngIf="!selectedUser?.country">
+                    Enter your country
+                  </h5>
+                </div>
+              </mat-tab>
+              <mat-tab label="Schedule">
+                <div *ngFor="let game of userGames$ | async">
+                  <div
+                    [style.display]="!game.scheduleDate ? 'none' : 'static'"
+                    style="display: flex; margin: 1rem;"
+                  >
+                    <img
+                      src="{{ game.cover.url }}"
+                      alt=""
+                      style="border-radius: 4px; box-shadow: 0 0 10px 1px black"
+                    />
+                    <h3 style="margin-left: 1rem;">{{ game.name }}</h3>
+                    <h2
+                      style="position: absolute; right: 0;"
+                      [style.color]="
+                        game.scheduleDate > currentDate ? 'green' : 'black'
+                      "
+                    >
+                      {{ game.scheduleDate | date: 'medium' }}
+                    </h2>
+                  </div>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Edit profile modal-->
+      <div
+        class="modal fade"
+        id="editProfileModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="ProfileLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="ProfileLabel">
+                Profile
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form (ngSubmit)="updateProfile(p, c)" #p="ngForm">
+              <div class="modal-body">
+                <!--First Name -->
+                <mat-form-field class="example-full-width">
+                  <input
+                    matInput
+                    type="text"
+                    placeholder="First Name"
+                    name="firstName"
+                    [(ngModel)]="selectedUser.firstName"
+                    #name="ngModel"
+                  />
+                </mat-form-field>
+                <!--Last Name -->
+                <mat-form-field class="example-full-width">
+                  <input
+                    matInput
+                    type="text"
+                    placeholder="Last Name"
+                    name="lastName"
+                    [(ngModel)]="selectedUser.lastName"
+                    #name="ngModel"
+                  />
+                </mat-form-field>
+                <input
+                  style="margin-bottom: 1.5rem;"
+                  type="file"
+                  (change)="onImagePicked($event)"
+                  name="uploadImage"
+                  [(ngModel)]="selectedUser.imagePath"
+                  #name="ngModel"
+                />
+                <!-- Date of birth-->
+                <mat-form-field class="example-full-width">
+                  <input
+                    matInput
+                    type="date"
+                    placeholder="Date of Birth"
+                    name="dateOfBirth"
+                    [(ngModel)]="selectedUser.dateOfBirth"
+                    #name="ngModel"
+                  />
+                </mat-form-field>
+
+                <!-- Hometown -->
+                <mat-form-field class="example-full-width">
+                  <input
+                    matInput
+                    type="text"
+                    placeholder="Hometown"
+                    name="hometown"
+                    [(ngModel)]="selectedUser.hometown"
+                    #name="ngModel"
+                  />
+                </mat-form-field>
+                <!-- Country -->
+                <mat-form-field class="example-full-width">
+                  <input
+                    matInput
+                    type="text"
+                    placeholder="Country"
+                    name="country"
+                    [(ngModel)]="selectedUser.country"
+                    #name="ngModel"
+                  />
+                </mat-form-field>
+
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    Update
+                  </button>
+                  <div class="alert alert-danger" *ngIf="error">
+                    Failed to update profile!
+                  </div>
+                  <div
+                    style="margin-top: 2rem;"
+                    class="alert alert-success"
+                    *ngIf="success"
+                  >
+                    You have successfully updated your profile!
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Modal -->
+      <div
+        class="modal fade"
+        id="deleteGameModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="deleteGameModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteGameModalLabel">Delete Game</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>
+                Do you want to delete?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-dismiss="modal"
+                (click)="onGameDeleteSubmit()"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!---SCHEDULE game-->
+<div
+  class="modal fade"
+  id="scheduleGameModal"
+  tabindex="0"
+  role="dialog"
+  aria-labelledby="scheduleGameModalLabel"
+  aria-hidden="true"
+>
+  <div
+    id="scheduleGame"
+    class="modal-dialog"
+    id="modal-schedule"
+    role="document"
+  >
+    <div class="modal-content" style="padding: 0;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="scheduleGameModalLabel">
+          Shedule game to your list
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div style="padding: 2rem;" class="modal-body" id="schedule-game">
+        <div style="display: flex; width: 100%; justify-content: center">
+          <img
+            src="{{ selectedGame.cover?.url.replace('t_thumb', 't_720p') }}"
+            style="height: 300px; box-shadow: 0 0 10px 5px rgb(78, 74, 74); border-radius: 4px;"
+            alt="cover img"
+          />
+        </div>
+        <div>
+          <div
+            style="display: flex; width: 100%; justify-content: space-between"
+          >
+            <h1 style="text-align: center; width: 100%;">
+              {{ selectedGame.name }}
+            </h1>
+          </div>
+          <div>
+            <form (ngSubmit)="onScheduleGameSubmit(g)" #g="ngForm">
+              <input
+                type="datetime-local"
+                placeholder="date until..."
+                name="scheduleDate"
+                ngModel
+                #name="ngModel"
+                [(ngModel)]="selectedGame.scheduleDate"
+              />
+              <div style="margin-top: 1rem;">
+                <p class="alert alert-success" *ngIf="success">
+                  schedule time is
+                  {{ selectedGame.scheduleDate | date: 'medium' }}
+                </p>
+              </div>
+
+              <button type="submit" id="gameButton">
+                schedule
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

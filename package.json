@@ -1,0 +1,38 @@
+{
+  "name": "gamingapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "server": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://mcmzrc@bitbucket.org/BocinS86/gamingapp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/BocinS86/gamingapp#readme",
+  "dependencies": {
+    "apicalypse": "^0.1.6",
+    "axios": "^0.19.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "igdb-api-node": "^4.0.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.6.9",
+    "multer": "^1.4.2",
+    "node-fetch": "^2.6.0",
+    "nodemailer": "^6.3.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "randomstring": "^1.1.5",
+    "validator": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}

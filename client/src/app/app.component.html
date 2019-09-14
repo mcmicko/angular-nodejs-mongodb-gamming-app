@@ -1,0 +1,6 @@
+<app-header></app-header>
+<ng-template [ngIf]="authService.isAuthenticated()">
+  <app-sidenav class="side-nav"></app-sidenav>
+</ng-template>
+
+<router-outlet></router-outlet>

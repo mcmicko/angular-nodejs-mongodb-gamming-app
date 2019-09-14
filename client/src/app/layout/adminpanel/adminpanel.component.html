@@ -1,0 +1,158 @@
+<div class="wraper">
+  <div class="container">
+    <div class="row">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col" class="text-center align-middle">#</th>
+                <th scope="col" class="text-center align-middle">User</th>
+                <th scope="col" class="text-center align-middle">Block</th>
+                <th scope="col" class="text-center align-middle">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users$ | async; let i = index">
+                <th scope="row" class="text-center align-middle">
+                  {{ i + 1 }}
+                </th>
+                <td class="text-center align-middle">{{ user.userName }}</td>
+                <td class="text-center align-middle">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-toggle="modal"
+                    data-target="#UserBlockModal"
+                    (click)="onUserDelete(user)"
+                  >
+                    Block
+                  </button>
+                </td>
+                <td class="text-center align-middle">
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="onUserDelete(user)"
+                    data-toggle="modal"
+                    data-target="#deleteUserModal"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div
+  class="modal fade"
+  id="deleteUserModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteUserLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteUserLabel">
+          Delete User
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Do you want to delete <em>{{ selectedUser?.userName }}</em> and all
+          saved games?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="onDeleteSubmit()"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Block modal-->
+<div
+  class="modal fade"
+  id="UserBlockModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Block User
+        </h5>
+        <p>
+          Do you want to block <em>{{ selectedUser?.userName }}</em
+          >?
+        </p>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form (ngSubmit)="blockUser(f)" #f="ngForm">
+          <mat-form-field class="example-full-width">
+            <input
+              matInput
+              type="date"
+              placeholder="Block until..."
+              name="blockedDate"
+              ngModel
+              #name="ngModel"
+            />
+          </mat-form-field>
+
+          <button type="submit" class="btn btn-danger mr-auto">
+            Block
+          </button>
+
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+          <div class="alert alert-danger" *ngIf="error">
+            Failed to block user!
+          </div>
+          <div class="alert alert-success" *ngIf="success">
+            You have successfully blocked user!
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

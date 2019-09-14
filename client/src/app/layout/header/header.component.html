@@ -1,0 +1,80 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <span
+      ><a routerLink="/home" style="font-size:3rem;"
+        ><span style="color: rgb(68, 202, 255);">Game</span>Book</a
+      ></span
+    >
+    <ng-template [ngIf]="authService.isAuthenticated()">
+      <span
+        ><a
+          routerLink="/home"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Home</a
+        ></span
+      >
+      <span
+        ><a routerLink="/profile" routerLinkActive="active">Profile</a></span
+      >
+      <span
+        ><a routerLink="/games-list" routerLinkActive="active"
+          >Pick Games</a
+        ></span
+      >
+      <div class="searchBox">
+        <form
+          (ngSubmit)="onSearchGameName(gameName)"
+          #gameName="ngForm"
+          class="form-inline mr-auto"
+        >
+          <input
+            class="form-control input-sm"
+            type="text"
+            id="name"
+            name="name"
+            ngModel
+            #name="ngModel"
+            required
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <button
+            class="btn btn-mdb-color btn-rounded btn-sm my-0 ml-sm-2"
+            type="submit"
+          >
+            Search
+          </button>
+        </form>
+      </div>
+    </ng-template>
+    <span class="example-spacer"></span>
+    <ng-template [ngIf]="authService.isAuthenticated()">
+      <span>
+        <small>
+          <a style="font-size: 2rem;" routerLink="/profile">{{
+            authService.getUserName()
+          }}</a>
+        </small>
+      </span>
+      <ng-template [ngIf]="authService.hasRoleAdmin()">
+        <mat-icon
+          class="material-icons"
+          [matBadgeHidden]="(messages$ | async)?.length == 0"
+          [matBadge]="(messages$ | async)?.length"
+          matBadgeColor="warn"
+        >
+          <a routerLink="/inbox">mail</a>
+        </mat-icon>
+      </ng-template>
+
+      <mat-icon class="example-icon" [matMenuTriggerFor]="menu">menu </mat-icon>
+      <mat-menu #menu="matMenu">
+        <ng-template [ngIf]="authService.hasRoleAdmin()">
+          <button mat-menu-item routerLink="/adminpanel">Admin panel</button>
+        </ng-template>
+        <button mat-menu-item (click)="authService.logout()">Logout</button>
+      </mat-menu>
+    </ng-template>
+  </mat-toolbar-row>
+</mat-toolbar>

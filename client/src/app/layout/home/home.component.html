@@ -1,0 +1,328 @@
+<div class="wraper">
+  <div class="container">
+    <div class="row">
+      <div class="noGames" *ngIf="(games$ | async)?.length == 0">
+        <h1>No Posted Games</h1>
+      </div>
+      <div *ngIf="games$ | async as games">
+        <div
+          class="col-lg-10 col-md-12 col-sm-12 mt-3"
+          *ngFor="let game of games"
+        >
+          <mat-card class="example-card">
+            <mat-card-header>
+              <mat-card-title>
+                <h4 class="title">{{ game.name }}</h4>
+                <h5 class="posted">
+                  <small>posted by</small> {{ game.user.userName }}
+                </h5>
+              </mat-card-title>
+              <mat-card-subtitle>
+                <div class="avgRating">
+                  <small style="margin-top: 10px; margin-right: 5px;">
+                    Average Rating:
+                  </small>
+                  <star-rating
+                    value="{{ avgRating(game) | number: '0.2-2' }}"
+                    checkedcolor="#0394fc"
+                    uncheckedcolor="gray"
+                    size="24px"
+                    readonly="true"
+                  ></star-rating>
+                </div>
+                <div class="subtitle">
+                  <p *ngFor="let platform of game.platforms">
+                    {{ platform.name }}
+                  </p>
+                </div>
+                <div *ngIf="game.platforms.length === 0">
+                  <small>No platforms available</small>
+                </div>
+                <p>
+                  Release date:
+                  {{ ' ' + game.first_release_date | date: 'dd.MM.yyyy' }}
+                </p></mat-card-subtitle
+              >
+            </mat-card-header>
+
+            <mat-card-content>
+              <div style="display: flex;">
+                <img
+                  style="width: 20%; margin-right: 1rem; border-radius: 4px; box-shadow: 0 5px 10px 1px rgb(73, 69, 69)"
+                  src="{{ game.cover?.url.replace('t_thumb', 't_720p') }}"
+                  alt="cover img"
+                />
+                <div>
+                  <p>
+                    {{ game.storyline }}
+                  </p>
+                  <p *ngIf="!game.storyline">
+                    This game does'nt have storyline provided from database
+                  </p>
+                  <p *ngIf="game.rating">
+                    rating:
+                    <strong
+                      [style.color]="
+                        game.rating > 90
+                          ? '#19d14a'
+                          : game.rating > 80
+                          ? '#1da128'
+                          : game.rating > 60
+                          ? '#bfd119'
+                          : game.rating > 40
+                          ? '#d9b01c'
+                          : '#bf3a1d'
+                      "
+                      >{{ game.rating.toFixed(1) }}</strong
+                    >
+                  </p>
+                  <p *ngIf="!game.rating">rating: N/A</p>
+                </div>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button
+                mat-button
+                data-toggle="modal"
+                data-target="#saveCommentModal"
+                (click)="onCommentAdd(game); onGetComments(game)"
+              >
+                COMMENTS
+              </button>
+              <div class="rating">
+                <small style="margin-top: 10px; margin-right: 5px;">
+                  Your rate:
+                </small>
+                <star-rating
+                  class="mt-n4"
+                  value="{{ getRating(game) }}"
+                  checkedcolor="#0394fc"
+                  uncheckedcolor="gray"
+                  size="24px"
+                  readonly="false"
+                  (rate)="onRateGame($event, game)"
+                ></star-rating>
+              </div>
+
+              <br />
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL comment -->
+<div
+  class="modal fade"
+  id="saveCommentModal"
+  tabindex="0"
+  role="dialog"
+  aria-labelledby="saveCommentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="saveCommentModalLabel">Add Comment</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form (ngSubmit)="onCommentSaveSubmit(f, c)" #f="ngForm">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col">
+              <!-- text -->
+              <div class="form-group">
+                <label for="text">Comment Content:</label>
+                <textarea
+                  placeholder="Write your comment..."
+                  name="content"
+                  id="text"
+                  class="form-control"
+                  cols="30"
+                  rows="10"
+                  ngModel
+                  required
+                  #text="ngModel"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+            #c
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Submit
+          </button>
+        </div>
+      </form>
+      <div class="modal-bodi" *ngFor="let comment of comments$ | async">
+        <div class="comment-body">
+          <p>
+            <span>{{ comment.user.userName }}</span
+            >: {{ comment.content }}
+          </p>
+
+          <ng-template [ngIf]="authService.hasRoleAdmin()">
+            <small
+              ><a
+                data-toggle="modal"
+                data-target="#deleteCommentModal"
+                (click)="onDeleteComment(comment)"
+                >Delete</a
+              ></small
+            >
+          </ng-template>
+          <small
+            ><a
+              data-toggle="modal"
+              data-target="#reportProblemModal"
+              (click)="onMessageSend(comment)"
+              >Report problem</a
+            ></small
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div
+  class="modal fade"
+  id="deleteCommentModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteCommentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteCommentModalLabel">Delete Comment</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Do you want to delete comment
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="onCommentDeleteSubmit()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Send message modal -->
+<div
+  class="modal fade"
+  id="reportProblemModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="reportProblemModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reportProblemModalLabel">
+          Report a problem
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          (ngSubmit)="onMessageSendSubmit(message, close)"
+          #message="ngForm"
+        >
+          <div class="form-group">
+            <label for="messageContent">Message Content</label>
+            <textarea
+              placeholder="Write your message..."
+              type="text"
+              class="form-control"
+              cols="30"
+              rows="10"
+              id="messageContent"
+              name="messageContent"
+              ngModel
+              required
+              messageContent
+              #messageContent="ngModel"
+              [ngClass]="{
+                'is-invalid':
+                  error?.messageContent ||
+                  (messageContent.invalid &&
+                    (messageContent.dirty || messageContent.touched))
+              }"
+            >
+            </textarea>
+
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                messageContent.invalid &&
+                (messageContent.dirty || messageContent.touched)
+              "
+            >
+              Please enter a message subject!
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              #close
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Send message
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

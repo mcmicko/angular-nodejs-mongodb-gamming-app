@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15%;
+}
+
+.example-card {
+  max-width: 450px;
+}
+mat-card {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+#insertEmailModal .mat-form-field {
+  width: 160px;
+  margin-bottom: 100px;
+}
+
+#insertEmailModal label {
+  margin-right: 10px;
+}
+
+#insertEmailModal .modal-body {
+  width: 400px;
+  height: 100px;
+}
+
+#insertEmailModal .modal-content {
+  width: 400px;
+  height: 100px;
+}
+
+#insertEmailModal button {
+  margin-top: 10px;
+}
+
+#insertEmailModal form {
+  height: 100px;
+  margin: 0px;
+  width: 380px;
+}
+.resetPassword a {
+  cursor: pointer;
+  text-decoration: none;
+}

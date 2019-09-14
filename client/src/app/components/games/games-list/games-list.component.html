@@ -1,0 +1,263 @@
+<!-- FILTERS -->
+<div id="filters">
+  <form id="filter" (ngSubmit)="filterGame()">
+    <!-- platforms -->
+    <select
+      [(ngModel)]="selectPlatform"
+      name="platform"
+      class="form-control ml-1"
+    >
+      <option [ngValue]="platform" *ngFor="let platform of platforms$">
+        {{ platform.name }}
+      </option>
+    </select>
+    <!-- genres -->
+    <select
+      [(ngModel)]="selectGenre"
+      name="genre"
+      class="form-control ml-1"
+      style="margin-left:10px"
+    >
+      <option [ngValue]="genre" *ngFor="let genre of genres$">
+        {{ genre.name }}
+      </option>
+    </select>
+    <!-- ratings -->
+    <select
+      [(ngModel)]="selectRating"
+      name="rating"
+      class="form-control ml-1"
+      style="margin-left:10px"
+    >
+      <option [ngValue]="rating" *ngFor="let rating of ratings$">
+        {{ rating.name }}
+      </option>
+    </select>
+
+    <button type="submit" class="btn btn-primary" style="margin-left:10px">
+      Apply Filters
+    </button>
+  </form>
+  <!-- search -->
+  <form id="search" (ngSubmit)="onSearchTitle(name)" #name="ngForm">
+    <input
+      class="form-control"
+      type="text"
+      style="margin-right: 10px;"
+      id="name"
+      name="name"
+      [(ngModel)]="selectGame.name"
+      placeholder="search the game"
+      #name="ngModel"
+      required
+    />
+    <input type="submit" value="search" class="btn btn-primary" />
+  </form>
+</div>
+
+<!-- LOADING -->
+<div id="loader">
+  <div *ngIf="!isLoading" class="lds-hourglass">
+    <div></div>
+  </div>
+</div>
+
+<!-- TABLE -->
+<div
+  [style.display]="isLoading ? 'block' : 'none'"
+  style="width: 95%;display: flex; margin: 0.5rem 1rem 2rem 1rem;"
+>
+  <table
+    id="table"
+    mat-table
+    [dataSource]="dataSource"
+    matSort
+    class="mat-elevation-z8"
+  >
+    <ng-container matColumnDef="cover">
+      <mat-header-cell *matHeaderCellDef style="width: 5%; font-size: 2rem;"
+        >cover</mat-header-cell
+      >
+      <mat-cell *matCellDef="let game">
+        <img
+          id="notImage"
+          *ngIf="game.cover?.url === null"
+          src="../../../../assets/placeholder.jpg"
+          alt=""
+        />
+        <img
+          *ngIf="game.cover?.url !== null"
+          src="{{ game.cover?.url.replace('t_thumb', 't_720p') }}"
+          alt=""
+        />
+        <button
+          id="pickButton"
+          type="button"
+          (click)="onSaveGame(game)"
+          data-toggle="modal"
+          data-target="#saveGameModal"
+        >
+          Pick
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name" style="height: 510px;">
+      <mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="font-size: 2rem;"
+        >name</mat-header-cell
+      >
+      <mat-cell *matCellDef="let game"
+        ><h4>{{ game.name }}</h4></mat-cell
+      >
+    </ng-container>
+
+    <ng-container matColumnDef="rating">
+      <mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        font-size: 2rem;"
+      >
+        rating
+      </mat-header-cell>
+      <mat-cell
+        *matCellDef="let game"
+        style="display:flex; flex-direction: column;"
+      >
+        <span
+          style="text-align: center;"
+          [style.color]="
+            game.rating > 90
+              ? '#19d14a'
+              : game.rating > 80
+              ? '#1da128'
+              : game.rating > 60
+              ? '#bfd119'
+              : game.rating > 40
+              ? '#d9b01c'
+              : '#bf3a1d'
+          "
+        >
+          <h1>{{ game.rating?.toFixed(1) }}</h1>
+        </span>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="platforms">
+      <mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="
+          display: flex; 
+          flex-direction: column; 
+          justify-content: center; 
+          font-size: 2rem;"
+        >platforms</mat-header-cell
+      >
+      <mat-cell
+        *matCellDef="let game"
+        style="display:flex; flex-direction: column; "
+      >
+        <span
+          style="text-align: center;"
+          *ngFor="let platform of game.platforms"
+        >
+          <h4 style="margin: 0;">- {{ platform.name }}</h4>
+        </span>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="genres">
+      <mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="display: flex; flex-direction: column; justify-content: center; font-size: 2rem;"
+        >genres</mat-header-cell
+      >
+      <mat-cell
+        *matCellDef="let game"
+        style="display: flex; flex-direction: column;"
+      >
+        <span *ngFor="let genre of game.genres">
+          <h5>{{ genre.name }}</h5>
+        </span>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row
+      *matHeaderRowDef="displayedColumns"
+      color="primary"
+    ></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </table>
+</div>
+
+<!---save game-->
+<div
+  class="modal fade"
+  id="saveGameModal"
+  tabindex="0"
+  role="dialog"
+  aria-labelledby="saveGameModalLabel"
+  aria-hidden="true"
+>
+  <div id="saveGame" class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="saveGameModalLabel">Add to your list</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div style="padding: 2rem;" class="modal-body">
+        <div style="display: flex; width: 100%; justify-content: center">
+          <img
+            id="notImage"
+            style="height: 50%"
+            *ngIf="selectGame.cover?.url === null"
+            src="../../../../assets/placeholder.jpg"
+            alt=""
+          />
+          <img
+            *ngIf="selectGame.cover?.url !== null"
+            src="{{ selectGame.cover?.url.replace('t_thumb', 't_720p') }}"
+            style="width: 50%; border-radius: 4px; box-shadow: 0 0 10px 4px black;"
+            alt="cover img"
+          />
+        </div>
+        <div style="display: flex; width: 100%; justify-content: space-between">
+          <h1 style="text-align: center">
+            {{ selectGame.name }}
+          </h1>
+          <h2>
+            <small>date: </small>
+            {{ selectGame.first_release_date * 1000 | date: 'dd.MM.yyyy ' }}
+          </h2>
+        </div>
+        <h3>{{ selectGame.storyline }}</h3>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          (click)="onSaveGameSubmit()"
+          type="submit"
+          class="btn btn-primary"
+          data-dismiss="modal"
+        >
+          add to list {{ selectGame.name }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

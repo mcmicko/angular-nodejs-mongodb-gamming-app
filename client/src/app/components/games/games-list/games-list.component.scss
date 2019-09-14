@@ -1,0 +1,93 @@
+#saveGame {
+  width: 900px;
+  padding: 0;
+}
+
+table {
+  width: 90%;
+  margin-left: 10%;
+
+  img {
+    width: 50%;
+    height: 205px;
+    object-fit: cover;
+  }
+  #notImage {
+    width: 50%;
+    padding: 0;
+    margin: 0;
+    height: 205px;
+  }
+}
+#loader {
+  position: absolute;
+  top: 40%;
+  left: 45%;
+
+  .lds-hourglass {
+    display: inline-block;
+
+    &:after {
+      content: ' ';
+      display: block;
+      border-radius: 50%;
+      width: 300px;
+      height: 300px;
+      margin: 6px;
+      box-sizing: border-box;
+      border: 26px solid #fff;
+      border-color: rgb(0, 204, 255) transparent rgb(30, 68, 172) transparent;
+      animation: lds-hourglass 1.2s infinite;
+    }
+    @keyframes lds-hourglass {
+      0% {
+        transform: rotate(0);
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+      }
+      50% {
+        transform: rotate(900deg);
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      100% {
+        transform: rotate(1800deg);
+      }
+    }
+  }
+}
+
+#filters {
+  width: 100%;
+  height: 200px;
+
+  #filter {
+    position: absolute;
+    top: 100px;
+    left: 225px;
+    display: flex;
+    flex-direction: row;
+    width: 40%;
+  }
+  #search {
+    position: absolute;
+    display: flex;
+    top: 100px;
+    right: 90px;
+  }
+}
+
+#pickButton {
+  background: rgb(0, 204, 255);
+  border-left: 0 solid black;
+  border: none;
+  border-radius: 1px;
+  width: 20%;
+  height: 205px;
+  box-shadow: 0 0px 10px 1px rgb(65, 62, 62);
+  transition: all 250ms linear;
+
+  &:hover {
+    background: rgb(9, 87, 107);
+    color: rgb(255, 255, 255);
+    border-left: 3px solid rgb(24, 22, 22);
+  }
+}

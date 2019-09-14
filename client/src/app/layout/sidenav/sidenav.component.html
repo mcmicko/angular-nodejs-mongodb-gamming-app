@@ -1,0 +1,30 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav class="example-sidenav" mode="side" [(opened)]="opened">
+    <mat-nav-list *ngFor="let user of users$ | async">
+      <mat-list-item>
+        <img
+          *ngIf="selectedUser.imagePath === null || undefined"
+          style="width: 30px; height: 30px; border-radius: 50%"
+          src="../../../assets/blank-profile-picture-973460_960_720.png"
+          alt=""
+        />
+        <img
+          style="width: 30px; height: 30px; border-radius: 50%;
+         margin-bottom:12px; margin-right: 2px; object-fit: cover;"
+          src="{{ user.imagePath }}"
+          alt=""
+        />
+        <a routerLink="{{ '/anotherUserProfile/' + user._id }}">
+          {{ user.userName }}
+        </a>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content
+    ><div class="icon">
+      <i class="material-icons" (click)="sidenav.toggle()">
+        menu_open
+      </i>
+    </div></mat-sidenav-content
+  >
+</mat-sidenav-container>
